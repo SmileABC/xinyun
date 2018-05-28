@@ -1,0 +1,12 @@
+vue与react对页面的渲染    react是虚拟dom 
+
+Vue 由于采用依赖追踪，默认就是优化状态：你动了多少数据，就触发多少更新，不多也不少。
+react 是数据发生改变的时候，会将那一版内容重新渲染一遍
+
+vue使用的是模板 .vue
+
+react使用的是 .jsx
+
+react不可以直接改变状态（state）得通过SetState修改
+
+vue可以直接修改 this.

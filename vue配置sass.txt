@@ -1,0 +1,24 @@
+1，
+npm install node-sass --save-dev
+npm install sass-loader --save-dev
+npm下载node-sass和sass-loader
+2，打开build文件夹下面的webpack.base.config.js
+加上  {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            'scss': 'style-loader!css-loader!sass-loader'
+          }
+        }
+      }
+
+3，如果需要在vue文件style标签使用scss的话，需要声明一下：
+
+<style rel="stylesheet/scss" lang="scss">
+
+
+
+先 npm i element-ui -S 安装
+
+

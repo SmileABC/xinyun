@@ -1,0 +1,80 @@
+
+1，全局钩子
+const router = new VueRouter({ ... })
+
+// 点击导航前调用
+router.beforeEach((to, from, next) => {
+  // ...
+})
+// 点击导航后调用
+router.afterEach(route => {
+  // ...
+})
+
+当一个导航触发时，全局的 before 钩子按照创建顺序调用。钩子是异步解析执行，此时导航在所有钩子 resolve 完之前一直处于 等待中。
+
+每个钩子方法接收三个参数：
+
+to: Route: 即将要进入的目标 路由对象
+
+from: Route: 当前导航正要离开的路由
+
+next: Function: 一定要调用该方法来 resolve 这个钩子。执行效果依赖 next 方法的调用参数。
+
+next(): 进行管道中的下一个钩子。如果全部钩子执行完了，则导航的状态就是 confirmed （确认的）。
+
+next(false): 中断当前的导航。如果浏览器的 URL 改变了（可能是用户手动或者浏览器后退按钮），那么 URL 地址会重置到 from 路由对应的地址。
+
+next(‘/’) 或者 next({ path: ‘/’ }): 跳转到一个不同的地址。当前的导航被中断，然后进行一个新的导航。
+
+
+2. 路由独享的钩子
+
+cont router = new VueRouter({
+    routes: [
+        {
+            path: '/file',
+            component: File,
+            beforeEnter: (to, from ,next) => {
+                // do someting
+            }
+        }
+    ]
+});
+
+3. 组建内的导航钩子
+
+组件内的导航钩子主要有这三种：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave。他们是直接在路由组件内部直接进行定义的
+
+我们看一下他的具体用法：
+
+const File = {
+    template: `<div>This is file</div>`,
+    beforeRouteEnter(to, from, next) {
+        // do someting
+        // 在渲染该组件的对应路由被 confirm 前调用
+    },
+    beforeRouteUpdate(to, from, next) {
+        // do someting
+        // 在当前路由改变，但是依然渲染该组件是调用
+    },
+    beforeRouteLeave(to, from ,next) {
+        // do someting
+        // 导航离开该组件的对应路由时被调用
+    }
+}
+
+最后是完整的导航解析流程：
+
+导航被触发
+在失活的组件里调用离开守卫
+调用全局的 beforeEach 守卫
+在重用的组件里调用 beforeRouteUpdate 守卫
+在路由配置里调用 beforEnter
+解析异步路由组件
+在被激活的组件里调用 beforeRouteEnter
+调用全局的 beforeResolve 守卫
+导航被确认
+调用全局的 afterEach 钩子
+触发 DOM 更新
+在创建好的实例调用 beforeRouteEnter 守卫中传给 next 的回调函数

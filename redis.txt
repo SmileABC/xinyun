@@ -1,0 +1,21 @@
+//接收数据
+$_POST['userid'] = 17;
+$userid = $_POST['userid'];
+//连接redis
+$redis = new Redis();
+$redis->connect('127.0.0.1',6379);
+$redis->auth('liliang');
+
+//连接mysql数据库
+$pdo = new PDO('mysql:host=localhost;dbname=leaf','root','li0liang');
+$sql = "select * from user_list where id={$userid}";
+
+$stm = $pdo->query($sql);
+$arr = $stm->fetch(PDO::FETCH_ASSOC);
+
+//向hash表中存储用户数据
+$redis->hmset('user_'.$arr['id'],['name'=>'liliang','age'=>'23']);
+
+//在用户的hash表中提取用户数据
+$array = $redis->hmget('user_'.$arr['id'],['name','id','tel']);
+var_dump($array);
